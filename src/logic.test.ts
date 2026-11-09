@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { createDigitValidator, isValidGuess } from './logic';
+import { createDigitValidator, isValidGuess, generateSecret } from './logic';
 
 describe('createDigitValidator', () => {
   it('should return true for valid digits in base 10', () => {
@@ -51,5 +51,31 @@ describe('isValidGuess', () => {
   it('should handle hex case-insensitively and check uniqueness', () => {
     expect(isValidGuess('1A2b', 4, 16)).toBe(true);
     expect(isValidGuess('1A1b', 4, 16)).toBe(false);
+  });
+});
+
+describe('generateSecret', () => {
+  it('should generate a secret of correct length', () => {
+    const secret = generateSecret(4, 10, () => 0.5);
+    expect(secret.length).toBe(4);
+  });
+
+  it('should generate unique digits', () => {
+    const secret = generateSecret(4, 10, () => 0.5);
+    const uniqueChars = new Set(secret);
+    expect(uniqueChars.size).toBe(4);
+  });
+
+  it('should be deterministic with mocked random', () => {
+    const mockRandom = () => 0.1;
+    const secret1 = generateSecret(4, 10, mockRandom);
+    const secret2 = generateSecret(4, 10, mockRandom);
+    expect(secret1).toBe(secret2);
+  });
+
+  it('should use all available digits for small base', () => {
+    const secret = generateSecret(2, 2, () => 0.5);
+    expect(secret.length).toBe(2);
+    expect(new Set(secret).size).toBe(2);
   });
 });
