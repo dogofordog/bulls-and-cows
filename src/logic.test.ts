@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { createDigitValidator, isValidGuess, generateSecret, evaluateGuess } from './logic';
+import {
+  createDigitValidator,
+  isValidGuess,
+  generateSecret,
+  evaluateGuess,
+  countPossibleSecrets,
+} from './logic';
 
 describe('createDigitValidator', () => {
   it('should return true for valid digits in base 10', () => {
@@ -105,5 +111,35 @@ describe('evaluateGuess', () => {
   it('should handle partial matches correctly', () => {
     expect(evaluateGuess('1234', '1567')).toEqual({ bulls: 1, cows: 0 });
     expect(evaluateGuess('1234', '5234')).toEqual({ bulls: 3, cows: 0 });
+  });
+});
+
+describe('countPossibleSecrets', () => {
+  it('should return 1 for length 0', () => {
+    expect(countPossibleSecrets(0, 10)).toBe(1);
+  });
+
+  it('should return base for length 1', () => {
+    expect(countPossibleSecrets(1, 10)).toBe(10);
+    expect(countPossibleSecrets(1, 16)).toBe(16);
+  });
+
+  it('should return correct permutations for length 2', () => {
+    expect(countPossibleSecrets(2, 10)).toBe(90); // 10 * 9
+  });
+
+  it('should return correct permutations for length 4 in base 10', () => {
+    expect(countPossibleSecrets(4, 10)).toBe(5040); // 10 * 9 * 8 * 7
+  });
+
+  it('should return 0 if length exceeds base', () => {
+    expect(countPossibleSecrets(5, 2)).toBe(0);
+    expect(countPossibleSecrets(11, 10)).toBe(0);
+  });
+
+  it('should be memoized (return cached result on repeated calls)', () => {
+    const result1 = countPossibleSecrets(4, 10);
+    const result2 = countPossibleSecrets(4, 10);
+    expect(result1).toBe(result2);
   });
 });
