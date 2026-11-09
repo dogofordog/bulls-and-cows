@@ -14,3 +14,15 @@ export const isValidGuess = (guess: string, length: number, base: number): boole
   const validator = createDigitValidator(base);
   return [...guess].every(validator);
 };
+export const generateSecret = (
+  length: number,
+  base: number,
+  random: () => number = Math.random
+): string => {
+  const availableDigits = '0123456789abcdef'.slice(0, base).split('');
+  return Array.from({ length }).reduce((acc) => {
+    const randIndex = Math.floor(random() * availableDigits.length);
+    const [picked] = availableDigits.splice(randIndex, 1);
+    return acc + picked;
+  }, '');
+};
