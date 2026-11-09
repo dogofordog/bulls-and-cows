@@ -45,3 +45,21 @@ export const evaluateGuess = (secret: string, guess: string): { bulls: number; c
 
   return { bulls, cows };
 };
+
+const countPossibleSecretsRaw = (length: number, base: number): number => {
+  if (length === 0) return 1;
+  if (length > base) return 0;
+  return base * countPossibleSecretsRaw(length - 1, base - 1);
+};
+
+const memoizationCache = new Map<string, number>();
+
+export const countPossibleSecrets = (length: number, base: number): number => {
+  const key = `${length},${base}`;
+  if (memoizationCache.has(key)) {
+    return memoizationCache.get(key) as number;
+  }
+  const result = countPossibleSecretsRaw(length, base);
+  memoizationCache.set(key, result);
+  return result;
+};
