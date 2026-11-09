@@ -7,7 +7,7 @@
     "format": "prettier --write src",
     "test": "vitest run",
     "test:watch": "vitest",
-    "build": "tsc",
+    "build": "tsc && cp index.html dist/",
     "prepare": "husky"
   },
   "lint-staged": {
