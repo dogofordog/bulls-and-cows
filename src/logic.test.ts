@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { createDigitValidator, isValidGuess, generateSecret } from './logic';
+import { createDigitValidator, isValidGuess, generateSecret, evaluateGuess } from './logic';
 
 describe('createDigitValidator', () => {
   it('should return true for valid digits in base 10', () => {
@@ -77,5 +77,33 @@ describe('generateSecret', () => {
     const secret = generateSecret(2, 2, () => 0.5);
     expect(secret.length).toBe(2);
     expect(new Set(secret).size).toBe(2);
+  });
+});
+
+describe('evaluateGuess', () => {
+  it('should return 4 bulls for exact match', () => {
+    expect(evaluateGuess('1234', '1234')).toEqual({ bulls: 4, cows: 0 });
+  });
+
+  it('should return 0 bulls and 4 cows for all digits in wrong positions', () => {
+    expect(evaluateGuess('1234', '4321')).toEqual({ bulls: 0, cows: 4 });
+  });
+
+  it('should return mixed bulls and cows', () => {
+    expect(evaluateGuess('1234', '1243')).toEqual({ bulls: 2, cows: 2 });
+  });
+
+  it('should return 0 bulls and 0 cows for no matching digits', () => {
+    expect(evaluateGuess('1234', '5678')).toEqual({ bulls: 0, cows: 0 });
+  });
+
+  it('should handle hex case-insensitively', () => {
+    expect(evaluateGuess('a1b2', 'A1B2')).toEqual({ bulls: 4, cows: 0 });
+    expect(evaluateGuess('a1b2', '2b1a')).toEqual({ bulls: 0, cows: 4 });
+  });
+
+  it('should handle partial matches correctly', () => {
+    expect(evaluateGuess('1234', '1567')).toEqual({ bulls: 1, cows: 0 });
+    expect(evaluateGuess('1234', '5234')).toEqual({ bulls: 3, cows: 0 });
   });
 });
