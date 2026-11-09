@@ -21,7 +21,7 @@ export const generateSecret = (
   random: () => number = Math.random
 ): string => {
   const availableDigits = '0123456789abcdef'.slice(0, base).split('');
-  return Array.from({ length }).reduce((acc) => {
+  return Array.from({ length }).reduce((acc: string) => {
     const randIndex = Math.floor(random() * availableDigits.length);
     const [picked] = availableDigits.splice(randIndex, 1);
     return acc + picked;

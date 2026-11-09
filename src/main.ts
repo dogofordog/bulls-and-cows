@@ -1,5 +1,13 @@
-import { initialState, updateSettings, startGame, addAttempt, winGame, resetGame } from './state';
-import { generateSecret, isValidGuess, evaluateGuess, countPossibleSecrets } from './logic';
+import {
+  initialState,
+  updateSettings,
+  startGame,
+  addAttempt,
+  winGame,
+  resetGame,
+  type Base,
+} from './state.js';
+import { generateSecret, isValidGuess, evaluateGuess, countPossibleSecrets } from './logic.js';
 
 let state = { ...initialState };
 
