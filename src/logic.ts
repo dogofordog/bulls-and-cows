@@ -14,6 +14,7 @@ export const isValidGuess = (guess: string, length: number, base: number): boole
   const validator = createDigitValidator(base);
   return [...guess].every(validator);
 };
+
 export const generateSecret = (
   length: number,
   base: number,
@@ -25,4 +26,22 @@ export const generateSecret = (
     const [picked] = availableDigits.splice(randIndex, 1);
     return acc + picked;
   }, '');
+};
+
+export const evaluateGuess = (secret: string, guess: string): { bulls: number; cows: number } => {
+  const lowerSecret = secret.toLowerCase();
+  const lowerGuess = guess.toLowerCase();
+
+  const bulls = [...lowerGuess].reduce(
+    (acc, char, index) => (char === lowerSecret[index] ? acc + 1 : acc),
+    0
+  );
+
+  const cows = [...lowerGuess].reduce(
+    (acc, char, index) =>
+      lowerSecret.includes(char) && char !== lowerSecret[index] ? acc + 1 : acc,
+    0
+  );
+
+  return { bulls, cows };
 };
